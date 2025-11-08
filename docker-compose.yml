@@ -1,0 +1,63 @@
+version: '3.9'
+
+services:
+  kafka:
+    image: bitnami/kafka:latest
+    environment:
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+
+  zookeeper:
+    image: bitnami/zookeeper:latest
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    ports:
+      - "2181:2181"
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
+  api_gateway:
+    build: ./services/api_gateway
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+    environment:
+      - KAFKA_BROKER=kafka:9092
+      - REDIS_HOST=redis
+    depends_on:
+      - kafka
+      - redis
+
+  auth_service:
+    build: ./services/auth_service
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8001"
+    ports:
+      - "8001:8001"
+    environment:
+      - KAFKA_BROKER=kafka:9092
+    depends_on:
+      - kafka
+
+  llm_service:
+    build: ./services/llm_service
+    command: >
+      sh -c "python manage.py runserver 0.0.0.0:8002"
+    ports:
+      - "8002:8002"
+    environment:
+      - KAFKA_BROKER=kafka:9092
+    depends_on:
+      - kafka

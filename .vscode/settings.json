@@ -1,0 +1,6 @@
+{
+    "python.analysis.extraPaths": [
+        "./services/api_gateway/api_gateway",
+        "./services/llm_service/llm_service"
+    ]
+}
