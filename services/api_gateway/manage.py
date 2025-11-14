@@ -9,7 +9,7 @@ def main():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'api_gateway.settings')
     try:
         from django.core.management import execute_from_command_line
-        from core.kafka_client import start_response_consumer
+        from api_gateway.core.kafka_client import start_response_consumer
         start_response_consumer()
     except ImportError as exc:
         raise ImportError(

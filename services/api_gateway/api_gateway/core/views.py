@@ -2,7 +2,8 @@ import uuid
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.core.cache import cache
-from .kafka_client import send_inference_request
+
+from api_gateway.core.kafka_client import send_inference_request
 
 @api_view(['POST'])
 def generate_response(request):
