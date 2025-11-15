@@ -4,18 +4,28 @@ from kafka import KafkaProducer, KafkaConsumer
 from django.conf import settings
 from django.core.cache import cache
 
-# Producer setup
+# -------------------------
+# Kafka Producer (Requests)
+# -------------------------
 producer = KafkaProducer(
     bootstrap_servers=settings.KAFKA_BROKER,
-    value_serializer=lambda v: json.dumps(v).encode('utf-8')
+    value_serializer=lambda v: json.dumps(v).encode("utf-8")
 )
 
 def send_inference_request(request_id, prompt):
+    """
+    Sends prompt + request_id to Kafka request topic.
+    """
     message = {"request_id": request_id, "prompt": prompt}
+    print(f"📨 Preparing to send request to Kafka: {message}")
     producer.send(settings.KAFKA_REQUEST_TOPIC, message)
     producer.flush()
+    print(f"📤 Sent request to Kafka: {message}")
 
-# Consumer setup (runs in background)
+
+# -------------------------
+# Kafka Consumer (Responses)
+# -------------------------
 def start_response_consumer():
     def consume():
         consumer = KafkaConsumer(

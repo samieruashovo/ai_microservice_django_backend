@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
      'rest_framework',
+     
 ]
 
 MIDDLEWARE = [
@@ -88,8 +89,9 @@ REDIS_PORT = 6379
 
 
 KAFKA_BROKER = os.getenv('KAFKA_BROKER', 'localhost:9092')
-KAFKA_REQUEST_TOPIC = 'inference.request'
-KAFKA_RESPONSE_TOPIC = 'inference.response'
+KAFKA_REQUEST_TOPIC = "inference_requests"
+KAFKA_RESPONSE_TOPIC = "inference_responses"
+# KAFKA_BROKER = "localhost:9092"
 
 
 # Password validation
