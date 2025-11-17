@@ -42,4 +42,5 @@ def start_response_consumer():
             print(f"✅ Cached response for {request_id}")
 
     thread = threading.Thread(target=consume, daemon=True)
+    
     thread.start()
