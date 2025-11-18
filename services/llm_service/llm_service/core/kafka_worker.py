@@ -12,7 +12,6 @@ producer = KafkaProducer(
 def run_inference(prompt: str) -> str:
     """
     Dummy model inference function.
-    You can later integrate DeepSeek, GPT, Sora, etc.
     """
     time.sleep(2)  # simulate processing delay
     return f"LLM response for: '{prompt}'"
